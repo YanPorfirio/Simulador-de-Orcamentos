@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <meta name="description" content="ProSimulador - Sistema profissional para simulação de orçamentos">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>ProSimulador - Sistema Profissional de Orçamentos</title>
+</head>
+
+<body>
+    <header>
+        <div class="container-one">
+            <h1>ProSimulador</h1>
+            <p>Sistema de Simulação de Orçamentos</p>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container-two">
+            <h2>Bem-vindo ao ProSimulador</h2>
+            <p>Este simulador irá permitir que o usuário faça cálculos para no fim<br>
+            obter o valor total do seu orçamento.</p>
+        </div>
+
+        <div class="container-three">
+            <h2>Instruções</h2>
+            <p>Para começar a usar o ProSimulador, siga as instruções abaixo:</p>
+            <ol>
+                <li>Adicione os itens que deseja incluir no orçamento.</li>
+                <li>Insira a quantidade e o preço de cada item.</li>
+                <li>Clique em "Calcular" para obter o valor total do orçamento.</li>
+            </ol>
+        </div>
+
+        <div class="container-four">
+            <div class="form-header">
+                <h3><i class="fas fa-plus-circle"></i> Adicionar Item ao Orçamento</h3>
+                <button id="toggle-form" class="icon-btn" title="Expandir/Recolher formulário">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            
+            <form id="budget-form" class="professional-form">
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label for="desc">
+                            <i class="fas fa-tag"></i> Descrição
+                        </label>
+                        <input type="text" 
+                               id="desc" 
+                               name="description" 
+                               required 
+                               placeholder="Ex: Serviço de Consultoria"
+                               autocomplete="off">
+                    </div>
+
+                    <div class="form-row">
+                        <label for="qty">
+                            <i class="fas fa-hashtag"></i> Quantidade
+                        </label>
+                        <input type="number" 
+                               id="qty" 
+                               name="quantity" 
+                               min="1" 
+                               value="1" 
+                               required>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="price">
+                            <i class="fas fa-dollar-sign"></i> Preço Unitário
+                        </label>
+                        <div class="input-group">
+                            <span class="input-prefix">R$</span>
+                            <input type="number" 
+                                   id="price" 
+                                   name="unitPrice" 
+                                   step="0.01" 
+                                   min="0" 
+                                   required 
+                                   placeholder="0,00">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="discount">
+                            <i class="fas fa-percent"></i> Desconto
+                        </label>
+                        <div class="input-group">
+                            <input type="number" 
+                                   id="discount" 
+                                   name="discount" 
+                                   step="0.01" 
+                                   min="0" 
+                                   max="100" 
+                                   value="0">
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-preview">
+                    <div class="preview-row">
+                        <span>Subtotal:</span>
+                        <span id="item-subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="preview-row">
+                        <span>Com desconto:</span>
+                        <span id="item-total">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="primary-btn">
+                        <i class="fas fa-plus"></i> Adicionar Item
+                    </button>
+                    <button type="reset" class="secondary-btn">
+                        <i class="fas fa-undo"></i> Limpar
+                    </button>
+                </div>
+            </form>
+
+            <div id="form-message" aria-live="polite"></div>
+        </div>
+
+        <div class="container-list">
+            <div class="list-header">
+                <h3><i class="fas fa-list-alt"></i> Itens do Orçamento</h3>
+                <div class="list-actions">
+                    <button id="save-budget" class="action-btn">
+                        <i class="fas fa-save"></i> Salvar Orçamento
+                    </button>
+                    <button id="export-pdf" class="action-btn">
+                        <i class="fas fa-file-pdf"></i> Exportar PDF
+                    </button>
+                    <button id="view-history" class="action-btn">
+                        <i class="fas fa-history"></i> Ver Histórico
+                    </button>
+                    <button id="new-budget" class="action-btn">
+                        <i class="fas fa-plus"></i> Novo Orçamento
+                    </button>
+                </div>
+            </div>
+
+            <!-- Painel de histórico (inicialmente oculto) -->
+            <div id="history-panel" class="history-panel" aria-hidden="true">
+                <h4>Histórico de Orçamentos</h4>
+                <div id="history-list">
+                    <!-- histórico carregado via JS -->
+                </div>
+                <div class="history-actions">
+                    <button id="close-history" class="secondary-btn">Fechar</button>
+                    <button id="clear-history" class="secondary-btn">Limpar Histórico</button>
+                </div>
+            </div>
+
+            <div class="budget-table-container">
+                <table id="budget-table" class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Descrição</th>
+                            <th>Quantidade</th>
+                            <th>Preço Unit.</th>
+                            <th>Desconto</th>
+                            <th>Subtotal</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="budget-items"></tbody>
+                </table>
+            </div>
+
+            <div class="summary-section">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal-amount">R$ 0,00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Total de Descontos:</span>
+                    <span id="discount-total">R$ 0,00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total Final:</span>
+                    <span id="total-amount">R$ 0,00</span>
+                </div>
+            </div>
+
+            <div class="budget-footer">
+                <div class="budget-info">
+                    <p>Orçamento #<span id="budget-number">001</span></p>
+                    <p>Data: <span id="budget-date"></span></p>
+                </div>
+                <div class="budget-actions">
+                    <button id="calculate-total" class="primary-btn">
+                        <i class="fas fa-calculator"></i> Atualizar Total
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
